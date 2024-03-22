@@ -1,0 +1,23 @@
+# 利用 Service可以把 Pods 暴露出来（指从 K8s 外部访问）
+# Service 是没有条件的直接暴露端口。当我们需要有条件的控制外部访问时，我们可以用 Ingress 对象。
+# 將不同路徑的請求對應到不同的 Service 物件
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules: #  Ingress 轉發規則
+    - host: ticketing.dev # 設定可以連接到 Service 物件的網域名稱
+      http:
+        paths:
+          - path: /api/users/?(.*) # 設定可以連接到 Service 物件的路徑名稱
+            pathType: Prefix
+            backend:
+              service: # 設定欲連接到的 Service 名稱
+                name: auth-srv
+                port: # 設定要經由哪個 port 連接到 Service 物件
+                  number: 3000
