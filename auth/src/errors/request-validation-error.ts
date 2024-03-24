@@ -1,8 +1,8 @@
 // https://blog.alexanderkaran.com/errors-in-typescript
-
+import { CustomError } from "./custom-error"
 import { ValidationError } from 'express-validator'
 
-export class RequestValidationError extends Error {
+export class RequestValidationError extends CustomError {
   statusCode = 400
   // If you omit public, TypeScript will not automatically create a property for the parameter. 
   constructor(public errors: ValidationError[]) {
